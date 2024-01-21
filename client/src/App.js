@@ -15,7 +15,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const getData = async () => {
     setIsLoading(true);
-    const { data } = await axios.get(`http://localhost:3000/get-pokemen`);
+    const { data } = await axios.get(`http://localhost:3000/get-pokemens`);
     setPokemons(data);
     setIsLoading(false)
   };
