@@ -23,7 +23,14 @@ function App() {
   };
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
+    const searchedPokemons = pokemons.filter((pokemon)=>pokemon.name.includes(searchTerm));
+    setSearchResults(searchedPokemons)
   };
+  const sortBy=(event)=>{
+    console.log(event.target.value)
+    const searchedPokemons = pokemons.filter((pokemon)=>pokemon.stats.findIndex(stat => stat.name === event.target.value)>0);
+    setSearchResults(searchedPokemons)
+  }
   useEffect(() => {
     getData();
     const searchedPokemons = pokemons.filter((pokemon)=>pokemon.name.includes(searchTerm))
@@ -38,6 +45,12 @@ function App() {
         value={searchTerm}
         onChange={handleChange}
       />
+       <span>Sort By</span>
+        <select defaultValue={'title'} onChange={sortBy}>
+          <option value="none">None</option>
+          <option value="attack">Attack</option>
+          <option value="defense">Defense</option>
+        </select>
       {!isLoading?<TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -48,7 +61,7 @@ function App() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {searchResults.length!=0&&searchResults.map((pokemon) => (
+          {searchResults.length!==0&&searchResults.map((pokemon) => (
             <TableRow
               key={pokemon.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
