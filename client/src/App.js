@@ -12,18 +12,32 @@ import Paper from '@mui/material/Paper';
 
 function App() {
   const [pokemons, setPokemons] = useState([])
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const getData = async () => {
     setIsLoading(true);
-    const { data } = await axios.get(`http://localhost:3000/get-pokemens`);
+    const { data } = await axios.get(`http://localhost:3000/get-pokemons`);
     setPokemons(data);
     setIsLoading(false)
   };
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
   useEffect(() => {
     getData();
-  }, []);
+    const searchedPokemons = pokemons.filter((pokemon)=>pokemon.name.includes(searchTerm))
+    setSearchResults(searchedPokemons)
+    setIsLoading(false)
+  }, [searchTerm]);
   return (
     <div className="App">
+       <input 
+        type="text"
+        placeholder="search pokemon name"
+        value={searchTerm}
+        onChange={handleChange}
+      />
       {!isLoading?<TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -34,7 +48,7 @@ function App() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {pokemons.map((pokemon) => (
+          {searchResults.length!=0&&searchResults.map((pokemon) => (
             <TableRow
               key={pokemon.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
